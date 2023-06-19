@@ -26,4 +26,11 @@ public abstract class AlgoAbstract {
     return key;
   }
 
+  private void messageCrypted(String message) {
+
+  }
+
+  private void messageDecrypted(String message) {
+
+  }
 }

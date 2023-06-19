@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -16,6 +18,7 @@ import javax.servlet.annotation.WebListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import fr.doranco.cryptage.IAlgoCrypto;
+import fr.doranco.cryptage.impl.AlgoAES;
 import fr.doranco.cryptage.impl.AlgoDES;
 
 @WebListener
@@ -33,13 +36,13 @@ public class AppConfig implements ServletContextListener {
 
   public static final String PROPERTY_APPLICATION_VERSION = "application.version";
   public static final String PROPERTY_KEY_DES = "des.key";
+  public static final String PROPERTY_KEY_AES = "aes.key";
 
   /* Properties for App */
   private static final Logger LOGGER = LogManager.getLogger(AppConfig.class);
-  
-  private IAlgoCrypto DES = new AlgoDES();
-  
 
+  private IAlgoCrypto DES = new AlgoDES();
+  private IAlgoCrypto AES = new AlgoDES();
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
@@ -57,25 +60,37 @@ public class AppConfig implements ServletContextListener {
     String version = CONF_PROPERTIES.getProperty(PROPERTY_APPLICATION_VERSION);
 
     LOGGER.atInfo().log("SNAPSHOT {}", version);
-    
+
 
     try {
-      SecretKey key = DES.generateKey(); 
-      
-      LOGGER.atInfo().log("GET SEC KEY '{}' :: OK :: {}", AlgoDES.ALGO, key.toString());
-      saveKeyToProperties(key);
+      SecretKey keyDES = DES.generateKey();
+      SecretKey keyAES = AES.generateKey();
+
+      Map<String, SecretKey> keys = new HashMap<String, SecretKey>();
+
+      keys.put(AlgoDES.ALGO, keyDES);
+      keys.put(AlgoAES.ALGO, keyAES);
+
+      // LOGGER.atInfo().log("GET SEC KEY '{}' :: OK :: {}", AlgoDES.ALGO, keyDES.toString());
+      // LOGGER.atInfo().log("GET SEC KEY '{}' :: OK :: {}", AlgoAES.ALGO, keyAES.toString());
+      saveKeysToProperties(keys);
     } catch (IOException e) {
       LOGGER.atError().log("IOException {}", e.getMessage());
     }
   }
 
-  public static void saveKeyToProperties(SecretKey key) throws IOException {
+  public static void saveKeysToProperties(Map<String, SecretKey> keys) throws IOException {
     File file = new File(ABSOLUTE_FILE_PATH_SEC);
     // create file with properties;
+
     if (!file.exists()) {
-      
+
       Properties properties = new Properties();
-      properties.setProperty(PROPERTY_KEY_DES, Base64.getEncoder().encodeToString(key.getEncoded()));
+      keys.forEach((keyName, kayValue) -> {
+        properties.setProperty(keyName, Base64.getEncoder().encodeToString(kayValue.getEncoded()));
+        LOGGER.atInfo().log("GET SEC KEY '{}' :: OK :: {}", keyName, kayValue.toString());
+      });
+
 
       try (OutputStream outputStream = new FileOutputStream(ABSOLUTE_FILE_PATH_SEC)) {
         properties.store(outputStream, "DES Key");
@@ -86,7 +101,7 @@ public class AppConfig implements ServletContextListener {
     } else {
       LOGGER.atWarn().log("File already exists in : {}", file.getAbsolutePath());
     }
-    
+
 
   }
 
@@ -101,13 +116,13 @@ public class AppConfig implements ServletContextListener {
     byte[] keyBytes = Base64.getDecoder().decode(encodedKey);
 
     SecretKey key = new SecretKeySpec(keyBytes, AlgoDES.ALGO);
-    
-    
-    
+
+
+
     return key;
   }
 
- 
+
 
   public static Properties getAppConfig() {
     return AppConfig.CONF_PROPERTIES;

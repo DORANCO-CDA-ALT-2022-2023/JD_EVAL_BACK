@@ -12,20 +12,7 @@ import fr.doranco.cryptage.IAlgoCrypto;
 public class AlgoDES extends AlgoAbstract
                      implements IAlgoCrypto {
 
-  // private static SecretKey key;
-  //
-  // public final static SecretKey getSecretKey() {
-  // return AlgoDES.key;
-  // }
-
-  public AlgoDES() {
-    // try {
-    // key = AppConfig.loadKeyFromProperties();
-    // } catch (IOException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-  }
+  public AlgoDES() {}
 
   public static final String ALGO = "DES";
 
@@ -38,13 +25,12 @@ public class AlgoDES extends AlgoAbstract
 
       keyGen = KeyGenerator.getInstance(AlgoDES.ALGO);
     } catch (NoSuchAlgorithmException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
     keyGen.init(56);
 
-//    this.key = keyGen.generateKey();
+    // this.key = keyGen.generateKey();
     key = keyGen.generateKey();
 
     return key;
