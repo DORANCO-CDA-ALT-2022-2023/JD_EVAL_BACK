@@ -15,6 +15,7 @@ public class DaoFactory {
   static {
     try {
       sf = new Configuration().configure().buildSessionFactory();
+      LOGGER.atInfo().log("Session Factory ? {}", sf.isOpen());
     } catch (Throwable ex) {
       LOGGER.atFatal().log("ERREUR PENDAT INITIALIZATION CONFIG Hibernate {}", ex.getMessage());
       throw new ExceptionInInitializerError(ex);

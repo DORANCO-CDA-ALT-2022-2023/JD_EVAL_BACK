@@ -17,11 +17,11 @@ public class AlgoAES extends AlgoAbstract
   @Override
   public SecretKey generateKey() {
     SecureRandom secureRandom = new SecureRandom();
-    
+
     byte[] keyBytes = new byte[16];
-    
+
     secureRandom.nextBytes(keyBytes);
-    
+
     return new SecretKeySpec(keyBytes, ALGO);
   }
 
@@ -31,9 +31,20 @@ public class AlgoAES extends AlgoAbstract
       Cipher cipher = Cipher.getInstance(ALGO);
       cipher.init(Cipher.ENCRYPT_MODE, key);
 
-      return cipher.doFinal(messageEncrypt.getBytes());
+      byte[] messageCryptedByte = cipher.doFinal(messageEncrypt.getBytes());
+      String messageCrypted = this.getMessagFromBytes(messageCryptedByte);
+
+      LOGGER.atInfo().log("INFO cipher : {} | {}", cipher.getAlgorithm(), cipher.getProvider().getInfo());
+      LOGGER.atInfo()
+            .log("MSG CRYPTED : {} | {}",
+                 messageCrypted,
+                 messageCrypted.getClass().getSimpleName());
+
+      return messageCryptedByte;
 
     } catch (Exception e) {
+      LOGGER.atError()
+            .log("AES encryption failed : {}", e.getMessage());
       throw new RuntimeException("AES encryption failed.", e);
     }
   }
@@ -43,10 +54,21 @@ public class AlgoAES extends AlgoAbstract
     try {
       Cipher cipher = Cipher.getInstance(ALGO);
       cipher.init(Cipher.DECRYPT_MODE, key);
-      
-      return cipher.doFinal(cipherBytes);
-      
+
+      byte[] messageDecryptedByte = cipher.doFinal(cipherBytes);
+
+      String messageDecrypted = this.getMessagFromBytes(messageDecryptedByte);
+
+      LOGGER.atInfo()
+            .log("MSG DECRYPTED : {} | {}",
+                 messageDecrypted,
+                 messageDecrypted.getClass().getSimpleName());
+
+      return messageDecryptedByte;
+
     } catch (Exception e) {
+      LOGGER.atError()
+            .log("AES decryption failed : {}", e.getMessage());
       throw new RuntimeException("AES decryption failed.", e);
     }
   }

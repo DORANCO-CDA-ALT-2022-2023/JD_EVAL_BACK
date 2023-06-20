@@ -1,6 +1,5 @@
 package fr.doranco.cryptage.impl;
 
-
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Cipher;
@@ -11,6 +10,8 @@ import fr.doranco.cryptage.IAlgoCrypto;
 
 public class AlgoDES extends AlgoAbstract
                      implements IAlgoCrypto {
+
+  // private static final Logger LOGGER = LogManager.getLogger(AlgoDES.class);
 
   public AlgoDES() {}
 
@@ -56,10 +57,13 @@ public class AlgoDES extends AlgoAbstract
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    System.out.println("info cipher : " + cipher.getProvider().getInfo());
 
-    System.out.println("message crypté : " + messageCrypted + " (" +
-                       messageCrypted.getClass().getSimpleName() + ")");
+    LOGGER.atInfo().log("INFO cipher : {} | {}", cipher.getAlgorithm(), cipher.getProvider().getInfo());
+    LOGGER.atInfo()
+          .log("MSG CRYPTED : {} | {}",
+               messageCrypted,
+               messageCrypted.getClass().getSimpleName());
+
 
     return cipherBytes;
   }
@@ -84,9 +88,10 @@ public class AlgoDES extends AlgoAbstract
 
     String messageDecripted = this.getMessagFromBytes(cipherBytesDecoded);
 
-
-    System.out.println("message crypté : " + messageDecripted + " (" +
-                       messageDecripted.getClass().getSimpleName() + ")");
+    LOGGER.atInfo()
+          .log("MSG DECRYPTED : {} | {}",
+               messageDecripted,
+               messageDecripted.getClass().getSimpleName());
 
     return cipherBytesDecoded;
   }

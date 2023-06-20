@@ -17,9 +17,11 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.SessionFactory;
 import fr.doranco.cryptage.IAlgoCrypto;
 import fr.doranco.cryptage.impl.AlgoAES;
 import fr.doranco.cryptage.impl.AlgoDES;
+import fr.doranco.dao.DaoFactory;
 
 @WebListener
 public class AppConfig implements ServletContextListener {
@@ -46,8 +48,10 @@ public class AppConfig implements ServletContextListener {
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
-    LOGGER.info("INIT CONFIG !");
+    LOGGER.atInfo().log("INIT HIBERNATE...");
+    SessionFactory sf = DaoFactory.getSessionFactory();
 
+    LOGGER.atInfo().log("INIT CONFIG...");
     CONF_PROPERTIES = new Properties();
     SEC_PROPERTIES = new Properties();
 

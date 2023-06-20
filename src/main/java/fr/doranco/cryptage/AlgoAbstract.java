@@ -11,7 +11,7 @@ public abstract class AlgoAbstract {
   protected static SecretKey key;
 
   /* Properties for App */
-  private static final Logger LOGGER = LogManager.getLogger(AlgoAbstract.class);
+  protected static final Logger LOGGER = LogManager.getLogger(AlgoAbstract.class);
 
   public void setSecretKey() {
     try {

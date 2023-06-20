@@ -1,58 +1,64 @@
 package fr.doranco.entities;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "utilisateur", propOrder = {
-        "id",
-        "nom",
-        "prenom",
-        "dateNaissance",
-        "isActif",
-        "profil",
-        "email",
-        "password",
-        "telephone",
-        "adresses",
-        "commandes",
-        "cartesDePaiement",
-        "commentaires",
-        "panier"
-})
 
+@Entity
+@Table(name = "utilisateur")
+@Getter
+@Setter
 public class Utilisateur {
-    @XmlElement(required = false)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @XmlElement(required = true)
-    private String nom;
+  private String nom;
 
-    @XmlElement(required = true)
-    private String prenom;
+  private String prenom;
 
-    private Date dateNaissance;
+  @Column(name = "date_naissance")
+  private Date dateNaissance;
 
-    private boolean isActif;
+  private boolean isActif;
 
-    private String profil;
+  private String profil;
 
-    private String email;
+  private String email;
 
-    private String password;
-    
-    private String telephone;
+  private String password;
 
-    private List<Adresse> addresses;
+  private String telephone;
 
-    private List<Commande> commandes;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "utilisateur_id")
+  private List<Adresse> adresses;
 
-    private List<CartePaiement> cartesDePaiement;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "utilisateur_id")
+  private List<Commande> commandes;
 
-    private List<Commentaire> commentaires;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "utilisateur_id")
+  private List<CartePaiement> cartesPaiement;
 
-    private List<ArticlePanier> panier;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "utilisateur_id")
+  private List<Commentaire> commentaires;
+
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "utilisateur_id")
+  private List<ArticlePanier> panier;
+
 }
