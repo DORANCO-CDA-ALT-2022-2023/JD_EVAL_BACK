@@ -2,22 +2,31 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
                                          "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
- <session-factory name="SessionFactory">
-  <!-- ===================================================== 
- A CHANGER VOTRE IDENTIFIANT ANSI QUE LA PORT POUR BDD 
- ===================================================== 
- DEPRICATED => com.mysql.jdbc.Driver -->
-  <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-  <property name="hibernate.connection.url">jdbc:mysql://localhost:3310/jd_evals_sql</property>
-  <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-  <property name="hibernate.connection.username">student</property>
-  <property name="hibernate.connection.password">pass</property>
-  <property name="connection.pool_size">3</property>
-  <property name="current_session_context_class">thread</property>
-  <!-- Uncomment if you want use JNDI 
- <property name="hibernate.session_factory_name">DaoFactory</property> -->
-  <property name="hibernate.show_sql">true</property>
-  <property name="hibernate.hbm2ddl.auto">create</property>
-  <mapping package="fr.doranco.entities"/>
- </session-factory>
+	<session-factory>
+		<!-- A CHANGER VOTRE IDENTIFIANT ANSI QUE LA PORT POUR BDD -->
+		<!-- DEPRICATED => com.mysql.jdbc.Driver -->
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3310/jd_evals_sql</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+		<property name="hibernate.connection.username">student</property>
+		<property name="hibernate.connection.password">pass</property>
+		<property name="connection.pool_size">3</property>
+		<property name="current_session_context_class">thread</property>
+		<!-- Uncomment if you want use JNDI -->
+		<!-- <property name="hibernate.session_factory_name">DaoFactory</property> -->
+		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		
+		<mapping class="fr.doranco.entities.Utilisateur"></mapping>
+		<mapping class="fr.doranco.entities.LigneCommande"></mapping>
+		<mapping class="fr.doranco.entities.Commentaire"></mapping>
+		<mapping class="fr.doranco.entities.Commande"></mapping>
+		<mapping class="fr.doranco.entities.Categorie"></mapping>
+		<mapping class="fr.doranco.entities.CartePaiement"></mapping>
+		<mapping class="fr.doranco.entities.ArticlePanier"></mapping>
+		<mapping class="fr.doranco.entities.Article"></mapping>
+		<mapping class="fr.doranco.entities.Adresse"></mapping>
+		
+<!-- 		<mapping package="fr.doranco.entities" /> -->
+	</session-factory>
 </hibernate-configuration>

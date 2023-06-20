@@ -14,6 +14,6 @@ public interface ISuperDao<T> {
   
   void delete(T t);
   
-  List<T> getAll(boolean onlyPositiveSolde);
+  List<T> getAll();
 
 }
