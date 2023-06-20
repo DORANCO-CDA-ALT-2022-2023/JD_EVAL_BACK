@@ -8,6 +8,8 @@ public interface ISuperDao<T> {
 
   T getById(int id);
   
+  T getByField(String field);
+  
   void update(T t);
   
   void delete(T t);
