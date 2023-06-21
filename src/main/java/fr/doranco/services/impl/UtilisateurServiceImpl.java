@@ -41,6 +41,32 @@ public class UtilisateurServiceImpl extends ServiceAbsctract {
   }
 
 
+  public ResponseAuthDto login(SignUpDto dto) {
+
+    Set<ConstraintViolation<Object>> violations = this.validator.validate(dto);
+
+    ResponseAuthDto response =
+                             this.handleViolations(dto,
+                                                   violations,
+                                                   () -> {
+                                                     try {
+                                                       dao.create(Utilisateur.builder()
+                                                                             .email(dto.getEmail())
+                                                                             .password(PasswordHasher.getHash(dto.getPassword()))
+                                                                             .build());
+
+                                                       return new ResponseAuthDto("Utilisateur avec: " +
+                                                                                  dto.getEmail() +
+                                                                                  " est créé !");
+                                                     } catch (Exception e) {
+                                                       return new ResponseAuthDto(e.getMessage());
+                                                     }
+                                                   },
+                                                   errorResponse -> new ResponseAuthDto(errorResponse));
+
+    return response;
+  }
+
 }
 
 
