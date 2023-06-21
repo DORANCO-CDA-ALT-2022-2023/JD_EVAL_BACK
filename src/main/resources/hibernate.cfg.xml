@@ -15,18 +15,16 @@
 		<!-- Uncomment if you want use JNDI -->
 		<!-- <property name="hibernate.session_factory_name">DaoFactory</property> -->
 		<property name="hibernate.show_sql">true</property>
-		<property name="hibernate.hbm2ddl.auto">update</property>
-		
-		<mapping class="fr.doranco.entities.Utilisateur"></mapping>
-		<mapping class="fr.doranco.entities.LigneCommande"></mapping>
-		<mapping class="fr.doranco.entities.Commentaire"></mapping>
-		<mapping class="fr.doranco.entities.Commande"></mapping>
-		<mapping class="fr.doranco.entities.Categorie"></mapping>
-		<mapping class="fr.doranco.entities.CartePaiement"></mapping>
-		<mapping class="fr.doranco.entities.ArticlePanier"></mapping>
-		<mapping class="fr.doranco.entities.Article"></mapping>
-		<mapping class="fr.doranco.entities.Adresse"></mapping>
-		
-<!-- 		<mapping package="fr.doranco.entities" /> -->
+		<property name="hibernate.hbm2ddl.auto">create</property>
+		<mapping class="fr.doranco.entities.Utilisateur" />
+		<mapping class="fr.doranco.entities.LigneCommande" />
+		<mapping class="fr.doranco.entities.Commentaire" />
+		<mapping class="fr.doranco.entities.Commande" />
+		<mapping class="fr.doranco.entities.Categorie" />
+		<mapping class="fr.doranco.entities.CartePaiement" />
+		<mapping class="fr.doranco.entities.ArticlePanier" />
+		<mapping class="fr.doranco.entities.Article" />
+		<mapping class="fr.doranco.entities.Adresse" />
+		<mapping package="fr.doranco.entities" />
 	</session-factory>
 </hibernate-configuration>

@@ -13,7 +13,7 @@ public abstract class DaoAbstract {
     return DaoFactory.getSessionFactory().openSession();
   }
 
-  protected Transaction getTransaction() {
+  protected Transaction beginTransaction() {
     return this.getSessions().beginTransaction();
   }
 }

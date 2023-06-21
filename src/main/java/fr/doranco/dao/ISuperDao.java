@@ -6,7 +6,7 @@ public interface ISuperDao<T> {
 
   void create(T t);
 
-  T getById(int id);
+  T getById(Long id);
   
   T getByField(String field);
   

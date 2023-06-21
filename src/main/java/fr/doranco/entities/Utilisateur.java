@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,17 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
+@NamedQueries({
+               @NamedQuery(
+                   name = "Utilisateur:findByEmail",
+                   query = "FROM Utilisateur u WHERE u.email = :email"),
+               @NamedQuery(
+                   name = "Utilisateur:findByRole",
+                   query = "FROM Utilisateur u WHERE u.profil = :profil"),
+               @NamedQuery(
+                   name = "Utilisateur:findAll",
+                   query = "FROM Utilisateur u"),
+})
 public class Utilisateur {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +56,7 @@ public class Utilisateur {
 
   private String profil;
 
+  @Column(unique = true)
   private String email;
 
   private String password;
