@@ -39,15 +39,17 @@ public class AppConfig implements ServletContextListener {
   public static final String PROPERTY_APPLICATION_VERSION = "application.version";
   public static final String PROPERTY_KEY_DES = "des.key";
   public static final String PROPERTY_KEY_AES = "aes.key";
+  public static final String PROPERTY_JWT_KEY = "jwt.key";
 
   /* Properties for App */
   private static final Logger LOGGER = LogManager.getLogger(AppConfig.class);
 
   private IAlgoCrypto DES = new AlgoDES();
-  private IAlgoCrypto AES = new AlgoDES();
+  private IAlgoCrypto AES = new AlgoAES();
+
 
   @Override
-  public void contextInitialized(ServletContextEvent sce) {    
+  public void contextInitialized(ServletContextEvent sce) {
     LOGGER.atInfo().log("INIT HIBERNATE...");
     SessionFactory sf = DaoFactory.getSessionFactory();
 
@@ -83,6 +85,7 @@ public class AppConfig implements ServletContextListener {
     }
   }
 
+
   public static void saveKeysToProperties(Map<String, SecretKey> keys) throws IOException {
     File file = new File(ABSOLUTE_FILE_PATH_SEC);
     // create file with properties;
@@ -105,9 +108,8 @@ public class AppConfig implements ServletContextListener {
     } else {
       LOGGER.atWarn().log("File already exists in : {}", file.getAbsolutePath());
     }
-
-
   }
+
 
   public static SecretKey loadKeyFromProperties() throws IOException {
     Properties properties = new Properties();
@@ -121,8 +123,6 @@ public class AppConfig implements ServletContextListener {
 
     SecretKey key = new SecretKeySpec(keyBytes, AlgoDES.ALGO);
 
-
-
     return key;
   }
 
@@ -132,10 +132,10 @@ public class AppConfig implements ServletContextListener {
     return AppConfig.CONF_PROPERTIES;
   }
 
-  @Override
-  public void contextDestroyed(ServletContextEvent sce) {
 
-  }
+
+  @Override
+  public void contextDestroyed(ServletContextEvent sce) {}
 
 
 

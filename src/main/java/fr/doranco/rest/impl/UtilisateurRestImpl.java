@@ -87,7 +87,7 @@ public class UtilisateurRestImpl extends RestAbstract {
   @Consumes(MediaType.APPLICATION_JSON + CHARSET)
   @Operation(
       summary = "Authentification d'un utilisateur",
-      description = "Reponse avec JWT ou nous avons ID utilisateur et rôle")
+      description = "Reponse avec JWT ou nous avons ID utilisateur et ID rôle")
   @ApiResponse(
       responseCode = "200",
       description = "Bienvenu {email} !")
