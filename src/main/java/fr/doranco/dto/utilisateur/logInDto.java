@@ -23,7 +23,7 @@ public class logInDto {
   @Email(message = "Email n'est pas correcte")
   private String email;
 
-  @JsonProperty("email")
+  @JsonProperty("password")
   @NotNull
   @NotBlank
   private String password;

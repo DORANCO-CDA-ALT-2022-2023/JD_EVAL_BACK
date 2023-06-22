@@ -10,6 +10,6 @@ public interface IAlgoCrypto {
 
   byte[] decrypte(byte[] cipherBytes, SecretKey key);
 
-  String getMessagFromBytes(byte[] bytes);
+  // String getMessagFromBytes(byte[] bytes);
 
 }

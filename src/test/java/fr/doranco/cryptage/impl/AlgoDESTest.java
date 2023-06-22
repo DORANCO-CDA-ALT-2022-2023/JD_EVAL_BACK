@@ -2,9 +2,11 @@ package fr.doranco.cryptage.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.io.UnsupportedEncodingException;
 import javax.crypto.SecretKey;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import fr.doranco.cryptage.AlgoAbstract;
 import fr.doranco.cryptage.IAlgoCrypto;
 
 class AlgoDESTest {
@@ -24,7 +26,7 @@ class AlgoDESTest {
   }
   
   @Test
-  void testEncryptToDecrypt() {
+  void testEncryptToDecrypt() throws UnsupportedEncodingException {
     byte[] cipherBytesEncoded = algoDES.encrypte(MSG_MOCK, key);
 
     assertNotNull(cipherBytesEncoded);
@@ -32,7 +34,7 @@ class AlgoDESTest {
     byte[] cipherBytesDecoded = algoDES.decrypte(cipherBytesEncoded, key);
 
     assertNotNull(cipherBytesDecoded);
-    assertEquals(algoDES.getMessagFromBytes(cipherBytesDecoded), MSG_MOCK);
+    assertEquals(AlgoAbstract.getMessagFromBytes(cipherBytesDecoded), MSG_MOCK);
   }
 
 }

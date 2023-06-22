@@ -10,12 +10,17 @@ import fr.doranco.cryptage.IAlgoCrypto;
 
 public class AlgoDES extends AlgoAbstract
                      implements IAlgoCrypto {
-
-  // private static final Logger LOGGER = LogManager.getLogger(AlgoDES.class);
-
-  public AlgoDES() {}
-
   public static final String ALGO = "DES";
+
+
+  public AlgoDES() {
+//    try {
+//      key = AppConfig.loadKeyFromProperties(AppConfig.PROPERTY_KEY_DES, ALGO);
+//    } catch (IOException e) {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
+  }
 
 
   @Override
@@ -52,7 +57,7 @@ public class AlgoDES extends AlgoAbstract
       byte[] messageBytes = messageEncrypt.getBytes("UTF-8");
       cipherBytes = cipher.doFinal(messageBytes);
 
-      messageCrypted = this.getMessagFromBytes(cipherBytes);
+      messageCrypted = AlgoAbstract.getMessagFromBytes(cipherBytes);
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -86,7 +91,13 @@ public class AlgoDES extends AlgoAbstract
       e.printStackTrace();
     }
 
-    String messageDecripted = this.getMessagFromBytes(cipherBytesDecoded);
+    String messageDecripted = null;
+    try {
+      messageDecripted = AlgoAbstract.getMessagFromBytes(cipherBytesDecoded);
+    } catch (UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     LOGGER.atInfo()
           .log("MSG DECRYPTED : {} | {}",
@@ -95,18 +106,5 @@ public class AlgoDES extends AlgoAbstract
 
     return cipherBytesDecoded;
   }
-
-  @Override
-  public String getMessagFromBytes(byte[] bytes) {
-    String message = null;
-    try {
-      message = new String(bytes, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return message;
-  }
-
 
 }

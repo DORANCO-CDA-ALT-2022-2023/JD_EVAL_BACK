@@ -1,6 +1,7 @@
 package fr.doranco.cryptage;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import javax.crypto.SecretKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,17 +14,26 @@ public abstract class AlgoAbstract {
   /* Properties for App */
   protected static final Logger LOGGER = LogManager.getLogger(AlgoAbstract.class);
 
-  public void setSecretKey() {
+  // public void setSecretKey() {
+  // try {
+  // key = AppConfig.loadKeyFromProperties();
+  // LOGGER.atInfo().log("LOAD KEY FROM PROPERTIES : {}", key.getAlgorithm());
+  // } catch (IOException e) {
+  // LOGGER.atError().log("IOException : {}", e.getMessage());
+  // }
+  // }
+
+  public final static SecretKey getSecretKey() {
     try {
-      key = AppConfig.loadKeyFromProperties();
-      LOGGER.atInfo().log("LOAD KEY FROM PROPERTIES : {}", key.getAlgorithm());
+      key = AppConfig.loadKeyFromProperties(AppConfig.PROPERTY_KEY_DES, ALGO);
     } catch (IOException e) {
-      LOGGER.atError().log("IOException : {}", e.getMessage());
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 
-  public final static SecretKey getSecretKey() {
-    return key;
+  public static String getMessagFromBytes(byte[] bytes) throws UnsupportedEncodingException {
+    return new String(bytes, "UTF-8");
   }
 
   private void messageCrypted(String message) {

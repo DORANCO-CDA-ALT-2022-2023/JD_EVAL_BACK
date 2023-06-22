@@ -9,15 +9,16 @@ import org.junit.jupiter.api.Test;
 import fr.doranco.cryptage.AlgoAbstract;
 import fr.doranco.cryptage.IAlgoCrypto;
 
-class AlgoAESTest {
+class AlgoSHA512Test {
 
-  static IAlgoCrypto algoAES = new AlgoAES();
+  static IAlgoCrypto algoSHA512 = new AlgoSHA512();
   static SecretKey key = null;
-  static final String MSG_MOCK = "FR7630006000011234567890189";
+  static final String MSG_MOCK = "KEY_FORT";
 
   @BeforeAll
   static void testInit() {
-    key = algoAES.generateKey();
+    
+    key = algoSHA512.generateKey();
   }
 
   @Test
@@ -27,15 +28,14 @@ class AlgoAESTest {
   
   @Test
   void testEncryptToDecrypt() throws UnsupportedEncodingException {
-    byte[] cipherBytesEncoded = algoAES.encrypte(MSG_MOCK, key);
+    byte[] cipherBytesEncoded = algoSHA512.encrypte(MSG_MOCK, key);
 
     assertNotNull(cipherBytesEncoded);
 
-    byte[] cipherBytesDecoded = algoAES.decrypte(cipherBytesEncoded, key);
+    byte[] cipherBytesDecoded = algoSHA512.decrypte(cipherBytesEncoded, key);
 
     assertNotNull(cipherBytesDecoded);
     assertEquals(AlgoAbstract.getMessagFromBytes(cipherBytesDecoded), MSG_MOCK);
   }
 
 }
- 

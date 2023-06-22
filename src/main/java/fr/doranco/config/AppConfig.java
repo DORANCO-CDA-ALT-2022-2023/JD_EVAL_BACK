@@ -77,12 +77,20 @@ public class AppConfig implements ServletContextListener {
       keys.put(AlgoDES.ALGO, keyDES);
       keys.put(AlgoAES.ALGO, keyAES);
 
-      // LOGGER.atInfo().log("GET SEC KEY '{}' :: OK :: {}", AlgoDES.ALGO, keyDES.toString());
-      // LOGGER.atInfo().log("GET SEC KEY '{}' :: OK :: {}", AlgoAES.ALGO, keyAES.toString());
+
       saveKeysToProperties(keys);
     } catch (IOException e) {
       LOGGER.atError().log("IOException {}", e.getMessage());
     }
+
+    LOGGER.atInfo()
+          .log("GET SEC KEY '{}' :: OK :: {}",
+               AlgoDES.ALGO,
+               AppConfig.SEC_PROPERTIES.getProperty(PROPERTY_KEY_DES));
+    LOGGER.atInfo()
+          .log("GET SEC KEY '{}' :: OK :: {}",
+               AlgoAES.ALGO,
+               AppConfig.SEC_PROPERTIES.getProperty(PROPERTY_KEY_AES));
   }
 
 
