@@ -25,11 +25,12 @@ public abstract class AlgoAbstract {
 
   public final static SecretKey getSecretKey() {
     try {
-      key = AppConfig.loadKeyFromProperties(AppConfig.PROPERTY_KEY_DES, ALGO);
+      key = AppConfig.loadKeyFromProperties();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    return key;
   }
 
   public static String getMessagFromBytes(byte[] bytes) throws UnsupportedEncodingException {

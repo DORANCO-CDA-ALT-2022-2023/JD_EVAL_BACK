@@ -18,6 +18,12 @@ import lombok.ToString;
 @ToString
 public class SignUpDto {
 
+  @JsonProperty("nom")
+  String nom;
+  
+  @JsonProperty("prenom")
+  String prenom;
+
   @JsonProperty("email")
   @NotNull
   @NotBlank
@@ -29,10 +35,10 @@ public class SignUpDto {
   @NotBlank
   private String password;
 
-  @JsonProperty("adresse")
-  private String adresse;
-
-  @JsonProperty("date")
-  private Date date;
+  @JsonProperty("dateDeNaissance")
+  private Date dateNaissance;
+  
+  @JsonProperty("telephone")
+  String telephone;
 
 }

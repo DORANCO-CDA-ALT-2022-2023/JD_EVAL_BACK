@@ -22,6 +22,7 @@ import fr.doranco.cryptage.IAlgoCrypto;
 import fr.doranco.cryptage.impl.AlgoAES;
 import fr.doranco.cryptage.impl.AlgoDES;
 import fr.doranco.dao.DaoFactory;
+import fr.doranco.services.impl.JwtService;
 
 @WebListener
 public class AppConfig implements ServletContextListener {
@@ -74,8 +75,8 @@ public class AppConfig implements ServletContextListener {
 
       Map<String, SecretKey> keys = new HashMap<String, SecretKey>();
 
-      keys.put(AlgoDES.ALGO, keyDES);
-      keys.put(AlgoAES.ALGO, keyAES);
+      keys.put(PROPERTY_KEY_DES, keyDES);
+      keys.put(PROPERTY_KEY_AES, keyAES);
 
 
       saveKeysToProperties(keys);
@@ -83,14 +84,9 @@ public class AppConfig implements ServletContextListener {
       LOGGER.atError().log("IOException {}", e.getMessage());
     }
 
-    LOGGER.atInfo()
-          .log("GET SEC KEY '{}' :: OK :: {}",
-               AlgoDES.ALGO,
-               AppConfig.SEC_PROPERTIES.getProperty(PROPERTY_KEY_DES));
-    LOGGER.atInfo()
-          .log("GET SEC KEY '{}' :: OK :: {}",
-               AlgoAES.ALGO,
-               AppConfig.SEC_PROPERTIES.getProperty(PROPERTY_KEY_AES));
+    new JwtService();
+    
+    LOGGER.atInfo().log("JWT KEY IN PROD :: {}", JwtService.getGetJwtKeyProd());
   }
 
 
@@ -100,20 +96,39 @@ public class AppConfig implements ServletContextListener {
 
     if (!file.exists()) {
 
-      Properties properties = new Properties();
+      // Properties properties = new Properties();
       keys.forEach((keyName, kayValue) -> {
-        properties.setProperty(keyName, Base64.getEncoder().encodeToString(kayValue.getEncoded()));
-        LOGGER.atInfo().log("GET SEC KEY '{}' :: OK :: {}", keyName, kayValue.toString());
+        SEC_PROPERTIES.setProperty(keyName, Base64.getEncoder().encodeToString(kayValue.getEncoded()));
+        LOGGER.atInfo()
+              .log("GET SEC KEY FROM NEW FILE '{}' :: OK :: {}",
+                   keyName,
+                   SEC_PROPERTIES.getProperty(keyName));
       });
 
 
       try (OutputStream outputStream = new FileOutputStream(ABSOLUTE_FILE_PATH_SEC)) {
-        properties.store(outputStream, "DES Key");
+        SEC_PROPERTIES.store(outputStream, "DES Key");
       }
 
       LOGGER.atInfo().log("File created and saved in : {}", ABSOLUTE_FILE_PATH_SEC);
 
     } else {
+
+      try (InputStream inputStream = new FileInputStream(file.getAbsolutePath())) {
+        SEC_PROPERTIES.load(inputStream);
+
+        LOGGER.atInfo()
+              .log("GET SEC KEY FROM OLD FILE '{}' :: OK :: {}",
+                   AlgoDES.ALGO,
+                   AppConfig.SEC_PROPERTIES.getProperty(PROPERTY_KEY_DES));
+        LOGGER.atInfo()
+              .log("GET SEC KEY FROM OLD FILE '{}' :: OK :: {}",
+                   AlgoAES.ALGO,
+                   AppConfig.SEC_PROPERTIES.getProperty(PROPERTY_KEY_AES));
+      } catch (IOException e) {
+        LOGGER.atError().log("IOException : {}", e.getMessage());
+      }
+
       LOGGER.atWarn().log("File already exists in : {}", file.getAbsolutePath());
     }
   }
@@ -138,6 +153,11 @@ public class AppConfig implements ServletContextListener {
 
   public static Properties getAppConfig() {
     return AppConfig.CONF_PROPERTIES;
+  }
+  
+  
+  public static Properties getSecConfig() {
+    return AppConfig.SEC_PROPERTIES;
   }
 
 

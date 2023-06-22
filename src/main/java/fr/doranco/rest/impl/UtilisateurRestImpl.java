@@ -6,6 +6,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import fr.doranco.dto.utilisateur.ResponseAuthDto;
@@ -41,7 +42,7 @@ public class UtilisateurRestImpl extends RestAbstract {
       responseCode = "201",
       description = "Utilisateur avec email {email} est enregistré!")
   @ApiResponse(
-      responseCode = "409",
+      responseCode = "400",
       description = "Verification de violation (ex. \"password\": \"ne doit pas être nul\", \"email\": \"Email n'est pas correcte\"")
   @ApiResponse(
       responseCode = "500",
@@ -87,13 +88,19 @@ public class UtilisateurRestImpl extends RestAbstract {
   @Consumes(MediaType.APPLICATION_JSON + CHARSET)
   @Operation(
       summary = "Authentification d'un utilisateur",
-      description = "Reponse avec JWT ou nous avons ID utilisateur et ID rôle")
+      description = "Reponse avec JWT (dans le cookies) ou nous avons ID utilisateur et ID rôle")
   @ApiResponse(
       responseCode = "200",
       description = "Bienvenu {email} !")
   @ApiResponse(
+      responseCode = "204",
+      description = "Pas de utilisateur dans BDD, donc \"Not Contete\"")
+  @ApiResponse(
       responseCode = "401",
-      description = "Unauthorized | email et mot de pass n'est correspend pas (recuperation mdp ?)")
+      description = "Unauthorized | \"message\": \"Mot de passe ou e-mail sont incorrectes\"")
+  @ApiResponse(
+      responseCode = "400",
+      description = "Unauthorized | \"message\": \"Mot de passe ou e-mail sont incorrectes\"")
   @ApiResponse(
       responseCode = "500",
       description = "Server erreur")
@@ -105,8 +112,35 @@ public class UtilisateurRestImpl extends RestAbstract {
                                 mediaType = MediaType.APPLICATION_JSON,
                                 schema = @Schema(
                                     implementation = logInDto.class)))
-                        @Valid logInDto dto) {
-    return null;
+                        @Valid logInDto dto) throws Exception {
+    LOGGER.atInfo().log("logIn :: {}", dto);
+
+    ResponseAuthDto response = null;
+
+    try {
+      response = service.authentification(dto);
+
+      return Response.status(Status.OK)
+                     .entity(ResponseAuthDto.builder()
+                                            .message(response.getMessage())
+                                            .build())
+                     .cookie(new NewCookie(response.getCookieWithJwt()))
+                     .build();
+    } catch (ErrorException e) {
+      return Response.status(e.getCode())
+                     .entity(e.getCode() != 400 ? ResponseAuthDto.builder()
+                                                                 .message(e.getMessage())
+                                                                 .build() :
+                                                e.getMessage())
+                     .build();
+    } catch (Exception e) {
+      return Response.status(Status.INTERNAL_SERVER_ERROR)
+                     .entity(ResponseAuthDto.builder()
+                                            .message(e.getMessage())
+                                            .build())
+                     .build();
+    }
   }
+
 
 }

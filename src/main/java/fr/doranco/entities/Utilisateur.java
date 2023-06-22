@@ -83,4 +83,18 @@ public class Utilisateur {
   @JoinColumn(name = "utilisateur_id")
   private List<ArticlePanier> panier;
 
+  public Utilisateur(String nom, String prenom, Date dateNaissance, String profil, String email,
+                     String password, String telephone) {
+    super();
+    this.nom = nom;
+    this.prenom = prenom;
+    this.dateNaissance = dateNaissance;
+    this.profil = profil;
+    this.email = email;
+    this.password = password;
+    this.telephone = telephone;
+  }
+
+
+
 }

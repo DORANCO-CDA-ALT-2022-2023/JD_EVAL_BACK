@@ -21,7 +21,7 @@ class JwtServiceTest {
 
   static IAlgoCrypto aesCrypto;
 
-  private static String KEY_MOCK = "KEY_FORT_SUPER_PUPER";
+  private static String KEY_MOCK = "MON_KEY_FORT";
   static SecretKey key = null;
   private static final long TIME_LIFE = 100000;
 
@@ -53,11 +53,11 @@ class JwtServiceTest {
       Claims claims = jws.getBody();
 
       int extractedUserId = Integer.parseInt(claims.getSubject());
-      // String extractedRole = (String) claims.get("role");
+      String extractedRole = (String) claims.get(JwtService.ROLE_ID);
 
       System.out.println("extractedUserId : " + extractedUserId);
       assertEquals(ID_USER, extractedUserId);
-      // assertEquals(ROLE, extractedRole);
+      assertEquals(ROLE, extractedRole);
 
     } catch (JwtException e) {
       // assertThrows(ExpiredJwtException.class, () -> JwtService.validateToken(tokenMock));
