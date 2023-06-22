@@ -14,15 +14,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public abstract class ServiceAbsctract {
-  private static final Logger LOGGER = LogManager.getLogger(ServiceAbsctract.class);
+  protected static final Logger LOGGER = LogManager.getLogger(ServiceAbsctract.class);
 
   private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
   protected Validator validator = factory.getValidator();
 
   protected ObjectMapper mapper = new ObjectMapper();
 
+
   /**
-   * Methode pour capter violation sur DTO
+   * @deprecated
+   *
+   *             Methode pour capter violation sur DTO
    * 
    * @param <T>
    * @param dto
@@ -57,5 +60,31 @@ public abstract class ServiceAbsctract {
     }
 
     return successSupplier.get();
+  }
+
+
+  /**
+   * @param dto
+   * @param violations
+   * @return
+   */
+  protected String getMessagesViolation(Object dto,
+                                        Set<ConstraintViolation<Object>> violations) {
+    ObjectNode errorJson = this.mapper.createObjectNode();
+
+    for (ConstraintViolation<Object> violation : violations) {
+      String fieldName = violation.getPropertyPath().toString();
+      String errorMessageString = violation.getMessage();
+
+      errorJson.put(fieldName, errorMessageString);
+    }
+
+    String errorResponse = null;
+    try {
+      errorResponse = this.mapper.writeValueAsString(errorJson);
+      return errorResponse;
+    } catch (JsonProcessingException e) {
+      return "Erreur pendant generation de message";
+    }
   }
 }

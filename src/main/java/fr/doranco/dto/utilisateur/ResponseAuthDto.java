@@ -1,4 +1,4 @@
-package fr.doranco.dto.impl;
+package fr.doranco.dto.utilisateur;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ResponseAuthDto {
 
-  private String msg;
+  private String message;
 
 }

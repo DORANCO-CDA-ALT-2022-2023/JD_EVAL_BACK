@@ -47,7 +47,7 @@ public class AppConfig implements ServletContextListener {
   private IAlgoCrypto AES = new AlgoDES();
 
   @Override
-  public void contextInitialized(ServletContextEvent sce) {
+  public void contextInitialized(ServletContextEvent sce) {    
     LOGGER.atInfo().log("INIT HIBERNATE...");
     SessionFactory sf = DaoFactory.getSessionFactory();
 
