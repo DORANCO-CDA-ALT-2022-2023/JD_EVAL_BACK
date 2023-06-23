@@ -1,9 +1,11 @@
 package fr.doranco.rest;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +33,15 @@ public abstract class RestAbstract {
     return ("Got it => " + this.getClass() + " | " + appVersion);
   }
 
+  @GET
+  @Path("test")
+  @Produces(MediaType.TEXT_PLAIN)
+  @RolesAllowed({"Admin", "Magasinier"})
+  public String test() {
+    String appVersion = AppConfig.getAppConfig().getProperty("application.version");
+
+    return ("Test => " + this.getClass() + " | " + appVersion);
+  }
 
 
 }

@@ -124,12 +124,44 @@ public class UtilisateurDaoImpl extends DaoAbstract
     try {
       this.session = this.getSessions();
 
-      Query<Utilisateur> query = session.createNamedQuery("Utilisateur:findAll", null);
+      Query<Utilisateur> query = session.createNamedQuery("Utilisateur:findAll", Utilisateur.class);
 
       return query.getResultList();
 
     } catch (Exception e) {
       LOGGER.atError().log("DAO Utilisateur findAll {}", e.getMessage());
+      throw new PersistenceException("Erreur pendant de recuperation des utilisateurs");
+    } finally {
+      if (this.session != null && this.session.isOpen()) {
+        this.session.close();
+      }
+    }
+
+  }
+  
+  
+  public List<Utilisateur> getAllByRole(String profil) {
+    try {
+      this.session = this.getSessions();
+
+      Query<Utilisateur> query = session.createNamedQuery("Utilisateur:findAllByProfil", Utilisateur.class);
+      
+      query.setParameter("profil", profil);
+
+      List<Utilisateur> liste = query.getResultList();
+      
+//      for (Utilisateur user : liste) {
+//        user.getAdresses();
+//        user.getCartesPaiement();
+//        user.getCommandes();
+//        user.getCommandes();
+//        user.get
+//      }
+ 
+      return query.getResultList();
+
+    } catch (Exception e) {
+      LOGGER.atError().log("DAO Utilisateur findAllByPRofil {}", e.getMessage());
       throw new PersistenceException("Erreur pendant de recuperation des utilisateurs");
     } finally {
       if (this.session != null && this.session.isOpen()) {

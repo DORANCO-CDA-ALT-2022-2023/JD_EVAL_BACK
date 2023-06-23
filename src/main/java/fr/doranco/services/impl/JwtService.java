@@ -88,16 +88,24 @@ public class JwtService {
   }
 
 
-  public static Jws<Claims> validateToken(String token) {
-    Key key = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes());
+  public static Jws<Claims> validateToken(String token) throws Exception {
+    try {
+      Key key = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes());
 
-    return Jwts.parserBuilder()
-               .setSigningKey(key)
-               .build()
-               .parseClaimsJws(token);
+
+
+      return Jwts.parserBuilder()
+                 .setSigningKey(key)
+                 .build()
+                 .parseClaimsJws(token);
+    } catch (Exception e) {
+      LOGGER.atError().log("JWT not valide :: {}", e.getMessage());
+      throw new Exception(e.getMessage());
+    }
+
   }
 
-  
+
   public static long expirationTime() {
     return JwtService.EXPIRATION_TIME;
   }

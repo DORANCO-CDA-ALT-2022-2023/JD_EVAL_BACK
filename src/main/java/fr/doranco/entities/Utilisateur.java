@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +14,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +37,7 @@ import lombok.ToString;
                    name = "Utilisateur:findByEmail",
                    query = "FROM Utilisateur u WHERE u.email = :email"),
                @NamedQuery(
-                   name = "Utilisateur:findByRole",
+                   name = "Utilisateur:findAllByProfil",
                    query = "FROM Utilisateur u WHERE u.profil = :profil"),
                @NamedQuery(
                    name = "Utilisateur:findAll",
@@ -63,24 +66,29 @@ public class Utilisateur {
 
   private String telephone;
 
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "utilisateur_id")
+  @Fetch(FetchMode.SUBSELECT)
   private List<Adresse> adresses;
 
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "utilisateur_id")
+  @Fetch(FetchMode.SUBSELECT)
   private List<Commande> commandes;
 
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "utilisateur_id")
+  @Fetch(FetchMode.SUBSELECT)
   private List<CartePaiement> cartesPaiement;
 
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "utilisateur_id")
+  @Fetch(FetchMode.SUBSELECT)
   private List<Commentaire> commentaires;
 
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "utilisateur_id")
+  @Fetch(FetchMode.SUBSELECT)
   private List<ArticlePanier> panier;
 
   public Utilisateur(String nom, String prenom, Date dateNaissance, String profil, String email,

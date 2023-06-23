@@ -1,10 +1,10 @@
 package fr.doranco.services.impl;
 
+import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.core.Cookie;
 import fr.doranco.cryptage.impl.PasswordHasher;
-import fr.doranco.dao.ISuperDao;
 import fr.doranco.dao.impl.UtilisateurDaoImpl;
 import fr.doranco.dto.utilisateur.ResponseAuthDto;
 import fr.doranco.dto.utilisateur.SignUpDto;
@@ -16,7 +16,7 @@ import fr.doranco.services.ServiceAbsctract;
 
 public class UtilisateurServiceImpl extends ServiceAbsctract {
 
-  ISuperDao<Utilisateur> dao = new UtilisateurDaoImpl();
+  UtilisateurDaoImpl dao = new UtilisateurDaoImpl();
 
 
   /**
@@ -88,9 +88,55 @@ public class UtilisateurServiceImpl extends ServiceAbsctract {
                           .cookieWithJwt(getCookieWithJWT(u))
                           .build();
   }
+  
+  
+  /**
+   * @param role
+   * @return
+   * @throws ErrorException
+   */
+  public List<Utilisateur> getAllUser(String role) throws ErrorException {
+
+    List<Utilisateur> liste = null;
+
+    try {
+      if (role == null) {
+        LOGGER.atWarn().log("role : {}", role);
+        liste = dao.getAll();
+        return liste;
+      }
+
+      if (!role.equals("Admin") || !role.equals("Magasinier") || !role.equals("Customer")) {
+        LOGGER.atWarn().log("role : {}", role);
+        throw new ErrorException(400, "Rôle n'est pas correct !");
+      }
+
+      liste = dao.getAllByRole(role);
+
+      if (liste == null || liste.size() == 0) {
+        LOGGER.atWarn().log("liste : {}", liste.toArray());
+        throw new ErrorException(204, "Pas de utilisateurs");
+      }
+
+    } catch (ErrorException e) {
+      // return new ResponseAuthDto(e.getMessage());
+      LOGGER.atError().log("ErrorException : {}", e.getMessage());
+      throw new ErrorException(e.getCode(), e.getMessage());
+    } catch (Exception e) {
+      LOGGER.atError().log("Exception : {}", e.getMessage());
+      throw new ErrorException(500, e.getMessage());
+    }
+
+    return liste;
+
+  }
 
 
-  public Cookie getCookieWithJWT(Utilisateur u) {
+  /**
+   * @param u
+   * @return
+   */
+  private Cookie getCookieWithJWT(Utilisateur u) {
     Cookie cookie = new Cookie("accessToken",
                                JwtService.generateToken(Long.toString(u.getId()),
                                                         u.getProfil()));
@@ -98,6 +144,8 @@ public class UtilisateurServiceImpl extends ServiceAbsctract {
 
     return cookie;
   }
+
+
 
 }
 

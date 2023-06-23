@@ -21,7 +21,12 @@ import org.hibernate.SessionFactory;
 import fr.doranco.cryptage.IAlgoCrypto;
 import fr.doranco.cryptage.impl.AlgoAES;
 import fr.doranco.cryptage.impl.AlgoDES;
+import fr.doranco.cryptage.impl.PasswordHasher;
 import fr.doranco.dao.DaoFactory;
+import fr.doranco.dao.ISuperDao;
+import fr.doranco.dao.impl.UtilisateurDaoImpl;
+import fr.doranco.entities.Utilisateur;
+import fr.doranco.entities.enumeration.ProfilUtilisateurEnum;
 import fr.doranco.services.impl.JwtService;
 
 @WebListener
@@ -48,11 +53,23 @@ public class AppConfig implements ServletContextListener {
   private IAlgoCrypto DES = new AlgoDES();
   private IAlgoCrypto AES = new AlgoAES();
 
+  ISuperDao<Utilisateur> userDao = new UtilisateurDaoImpl();
+
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
     LOGGER.atInfo().log("INIT HIBERNATE...");
     SessionFactory sf = DaoFactory.getSessionFactory();
+
+    // creation d'un admin
+    userDao.create(Utilisateur.builder()
+                              .nom("Admin_nom")
+                              .prenom("Admin_prenom")
+                              .email("admin@doranco.fr")
+                              .password(PasswordHasher.getHash("admin"))
+                              .profil(ProfilUtilisateurEnum.ADMIN.getProfil())
+                              .build());
+
 
     LOGGER.atInfo().log("INIT CONFIG...");
     CONF_PROPERTIES = new Properties();
@@ -85,7 +102,7 @@ public class AppConfig implements ServletContextListener {
     }
 
     new JwtService();
-    
+
     LOGGER.atInfo().log("JWT KEY IN PROD :: {}", JwtService.getGetJwtKeyProd());
   }
 
@@ -154,8 +171,8 @@ public class AppConfig implements ServletContextListener {
   public static Properties getAppConfig() {
     return AppConfig.CONF_PROPERTIES;
   }
-  
-  
+
+
   public static Properties getSecConfig() {
     return AppConfig.SEC_PROPERTIES;
   }
