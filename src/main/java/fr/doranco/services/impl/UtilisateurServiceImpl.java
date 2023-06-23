@@ -17,6 +17,7 @@ import fr.doranco.services.ServiceAbsctract;
 public class UtilisateurServiceImpl extends ServiceAbsctract {
 
   UtilisateurDaoImpl dao = new UtilisateurDaoImpl();
+  MailService ms = new MailService();
 
 
   /**
@@ -39,6 +40,10 @@ public class UtilisateurServiceImpl extends ServiceAbsctract {
                                  dto.getEmail(),
                                  PasswordHasher.getHash(dto.getPassword()),
                                  dto.getTelephone()));
+      ms.sendEmail(dto.getEmail(),
+                   "Bienvenu cher nous !",
+                   "Il faut penser à valider votre compte ..." +
+                   "¯\\_(ツ)_/¯");
     } catch (ErrorException e) {
       // return new ResponseAuthDto(e.getMessage());
       throw new ErrorException(e.getCode(), e.getMessage());
