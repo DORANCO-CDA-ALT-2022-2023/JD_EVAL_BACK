@@ -88,8 +88,8 @@ public class UtilisateurServiceImpl extends ServiceAbsctract {
                           .cookieWithJwt(getCookieWithJWT(u))
                           .build();
   }
-  
-  
+
+
   /**
    * @param role
    * @return
@@ -106,7 +106,9 @@ public class UtilisateurServiceImpl extends ServiceAbsctract {
         return liste;
       }
 
-      if (!role.equals("Admin") || !role.equals("Magasinier") || !role.equals("Customer")) {
+      if (!(role.equals(ProfilUtilisateurEnum.ADMIN.getProfil()) ||
+            role.equals(ProfilUtilisateurEnum.STOREKEEPER.getProfil()) ||
+            role.equals(ProfilUtilisateurEnum.CUSTOMER.getProfil()))) {
         LOGGER.atWarn().log("role : {}", role);
         throw new ErrorException(400, "Rôle n'est pas correct !");
       }
